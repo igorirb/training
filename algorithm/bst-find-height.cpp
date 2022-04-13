@@ -22,13 +22,6 @@ void insert(Node** root, int value) {
   }
 }
 
-bool search(Node* root, int value) {
-  if (root == NULL) return false;
-  if (root->data == value) return true;
-  if (value > root->data) return search(root->right, value);
-  if (value < root->data) return search(root->left, value);
-}
-
 void printBT(string prefix, Node* node, bool isLeft) {
   if(node != NULL) {
     cout << prefix;
