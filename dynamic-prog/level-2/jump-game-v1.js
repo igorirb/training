@@ -5,10 +5,10 @@
 function jump (nums, start) {
     let result = false;
     if (start === nums.length - 1) return true;
-    if (start >= nums.length) {
-        return false;
-    }
     for (let i = 1; i <= nums[start]; i += 1) {
+        if (start + i >= nums.length) {
+            break;
+        }
         if (jump(nums, start + i)) {
             result = true;
         }
