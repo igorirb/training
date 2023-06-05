@@ -4,37 +4,39 @@
  * @return {number}
  */
 var calculate = function(s) {
-    const stack = new Array();
+    const stack = [];
     const chars = s.match(/([0-9]+)|([+\-\*\/]+)/g);
     while (chars.length) {
         const char = chars.shift();
-        if (/[0-9+]/.test(char)) {
-            stack.push(char);
-        } else if (/[-]/.test(char)) {
+        if (char === '-') {
             const nextChar = chars.shift();
             stack.push('+');
-            stack.push(`-${nextChar}`);
-        } else if (/\*|\//.test(char)) {
-            const right = Number.parseFloat(chars.shift());
-            const left = Number.parseFloat(stack.pop());
+            stack.push(-nextChar);
+        } else if (char === '*' || char === '/') {
+            const right = Number.parseInt(chars.shift(), 10);
+            const left = stack.pop();
             let result;
             if (char === '*') {
                 result = left * right;
             } else {
                 result = left / right;
+                let signal = 1;
                 if (result < 0) {
-                    result = -Math.floor(Math.abs(result));
-                } else {
-                    result = Math.floor(result);
+                    signal = -1;
                 }
+                result = signal * Math.floor(Math.abs(result));
             }
             stack.push(result);
+        } else if (char === '+') {
+            stack.push(char);
+        } else {
+            stack.push(Number.parseInt(char, 10));
         }
     }
     while (stack.length > 1) {
-        const right = Number.parseFloat(stack.pop(), 10);
+        const right = stack.pop();
         const op = stack.pop();
-        const left = Number.parseFloat(stack.pop(), 10);
+        const left = stack.pop();
         let result;
         if (op === '+') {
             result = left + right;

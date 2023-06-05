@@ -1,49 +1,38 @@
 /**
- * Time limit exceeded
  * @param {string} s
  * @return {number}
  */
 var calculate = function(s) {
-    const stack = [];
-    const chars = s.match(/([0-9]+)|([+\-\*\/]+)/g);
-    while (chars.length) {
-        const char = chars.shift();
-        if (char === '-') {
-            const nextChar = chars.shift();
-            stack.push('+');
-            stack.push(-nextChar);
-        } else if (char === '*' || char === '/') {
-            const right = Number.parseInt(chars.shift(), 10);
-            const left = stack.pop();
+    const parts = s.split(/([+\-*/])/);
+    const temp = [];
+    for (let i = 0; i < parts.length; i += 1) {
+        if (parts[i] === '*' || parts[i] === '/') {
+            const op = parts[i];
+            const left = Number.parseFloat(temp.pop());
+            i += 1;
+            const right = Number.parseFloat(parts[i]);
             let result;
-            if (char === '*') {
-                result = left * right;
+            if (op === '*') {
+                temp.push(left * right);
             } else {
-                result = left / right;
-                let signal = 1;
-                if (result < 0) {
-                    signal = -1;
-                }
-                result = signal * Math.floor(Math.abs(result));
+                temp.push(Math.floor(left / right));
             }
-            stack.push(result);
-        } else if (char === '+') {
-            stack.push(char);
         } else {
-            stack.push(Number.parseInt(char, 10));
+            temp.push(parts[i]);
         }
     }
-    while (stack.length > 1) {
-        const right = stack.pop();
-        const op = stack.pop();
-        const left = stack.pop();
-        let result;
-        if (op === '+') {
-            result = left + right;
-        } else {
-            result = left - right;
+    let result = Number.parseFloat(temp[0]);
+    for (let i = 1; i < temp.length; i += 1) {
+        const curr = temp[i].trim();
+        if (curr === '+' || curr === '-') {
+            i += 1;
+            const right = Number.parseFloat(temp[i]);
+            if (curr === '+') {
+                result += right;
+            } else {
+                result -= right;
+            }
         }
-        stack.push(result);
     }
-    return stack.pop();
+    return result;
 };
