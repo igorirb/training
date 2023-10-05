@@ -5,3 +5,4 @@
 .vscode
 books/*
 big-techs/*
+.DS_Store
